@@ -12,6 +12,8 @@ class UserModel(Base):
     :param surname: user surname
     :param email: user email
     :param password: user password hash
+    :param is_admin: user admin status 
+
     """
     __tablename__ = "users"
 
