@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  app:
+    build: .
+    container_name: audio-host-back
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition:
+          service_healthy
+
+  db:
+    image: postgres:16
+    container_name: audio-host-db
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_HOST=${DB_HOST}
+      - POSTGRES_PORT=${DB_PORT}
+    healthcheck:
+      test: pg_isready -d ${DB_NAME} -U ${DB_USER}
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

@@ -4,19 +4,22 @@ from src.api.yandex.dtos.yandex import CallBackCodeDTO
 
 from src.apps.auth.depends.token_service import ITokenService
 from src.apps.user.depends.service import IUserService
+
 from src.apps.user.dto import UserDTO, FindUserDTO
 from src.apps.user.entity import UserEntity
+
 from src.libs.exceptions import AlreadyExistError
+
+from src.config.yandex import settings
 
 class YandexService:
     def __init__(self, token_service: ITokenService, user_service: IUserService):
         self.token_service = token_service
         self.user_service = user_service
 
-        self.client_id = ""
-        self.client_secret = ""
-        self.redirect_uri = ""
-        self.internal_token_expire_hours = 10 #hours
+        self.client_id = settings.yandex_client_id
+        self.client_secret = settings.yandex_client_secret
+        self.redirect_uri = settings.yandex_redirect_uri
 
         self.auth_url = "https://oauth.yandex.com/authorize"
         self.token_url = "https://oauth.yandex.com/token"
