@@ -15,7 +15,6 @@ class AudioFileModel(Base):
     file_path: Mapped[str] = mapped_column(Text)
     file_size: Mapped[int] = mapped_column(Integer, nullable=True)
 
-    # Relationship: one user to many audio files
     user: Mapped[List["UserModel"]] = relationship(
         back_populates="audio_files",
     )
