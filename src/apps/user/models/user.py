@@ -1,4 +1,4 @@
-from sqlalchemy import String
+from sqlalchemy import String, Boolean
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.libs.base_model import Base
@@ -19,3 +19,5 @@ class UserModel(Base):
     surname: Mapped[str] = mapped_column(String(20), nullable=True)
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     password: Mapped[str]
+
+    is_admin: Mapped[bool] = mapped_column(Boolean)
