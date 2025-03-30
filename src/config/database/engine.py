@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import (
     async_scoped_session
 )
 
-from src.config.database.settings import settings
+# from src.config.database.settings import settings
 
 
 class DatabaseHelper:
@@ -55,4 +55,5 @@ class DatabaseHelper:
             await session.close()
 
 
-db_helper = DatabaseHelper(settings.database_url, settings.db_echo_log)
+# db_helper = DatabaseHelper(settings.database_url, settings.db_echo_log)
+db_helper = DatabaseHelper("sqlite+aiosqlite:///DEBUG.db", echo=True) #TODO: FOR DEBUG DEV

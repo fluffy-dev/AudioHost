@@ -77,6 +77,4 @@ class UserRepository:
             name=row.name,
             surname=row.surname,
             email=row.email,
-            password=row.password,
-            is_admin=row.is_admin,
         )

@@ -1,22 +1,21 @@
-from typing import Optional
-from src.libs.base_dto import BaseDto
+from pydantic import BaseModel, EmailStr, constr
 
-class UserDTO(BaseDto):
-    id: int
-    name: str
-    surname: Optional[str] = None
-    email: str
-    password: str
-    is_admin: bool
 
-class UpdateUserDTO(BaseDto):
-    name: Optional[str] = None
-    surname: Optional[str] = None
-    email: Optional[str] = None
-    password: Optional[str] = None
-    is_admin: Optional[bool] = None
+class FindUserDTO(BaseModel):
+    id: int = None
+    name: constr(max_length=20) = None
+    surname: constr(max_length=20) = None
+    email: EmailStr = None
 
-class FindUserDTO(BaseDto):
-    name: Optional[str] = None
-    surname: Optional[str] = None
-    email: Optional[str] = None
+
+
+class UserDTO(BaseModel):
+    id: int = None
+    name: constr(max_length=20)
+    surname: constr(max_length=20)
+    email: EmailStr
+
+
+
+class UpdateUserDTO(BaseModel):
+    pass

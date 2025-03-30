@@ -1,10 +1,13 @@
-from jwt import ExpiredSignatureError, PyJWTError, decode, encode, get_unverified_header
 from src.api.auth.dtos.token import TokenDTO
-from datetime import datetime, timedelta
+
 from src.config.jwt_config import config_token
 from src.config.security import settings
+
 from src.apps.auth.exceptions.token import InvalidSignatureError
-from typing import Any
+from src.apps.user.dto import UserDTO
+
+from jwt import ExpiredSignatureError, PyJWTError, decode, encode, get_unverified_header
+from datetime import datetime, timedelta
 
 
 class TokenService:
@@ -14,7 +17,7 @@ class TokenService:
         self.secret_key = settings.secret_key
         self.algorithm = settings.algorithm
 
-    async def create_tokens(self, dto: Any) -> TokenDTO:
+    async def create_tokens(self, dto: UserDTO) -> TokenDTO:
         """
         Create both an access token and a refresh token.
         """
@@ -51,7 +54,7 @@ class TokenService:
         except PyJWTError:
             raise Exception("Token is invalid")
 
-    async def generate_access_token(self, dto: Any) -> str:
+    async def generate_access_token(self, dto: UserDTO) -> str:
         """
         Generate an access token with a payload that includes user details.
         """
@@ -64,7 +67,7 @@ class TokenService:
         }
         return await self.encode_token(payload)
 
-    async def generate_refresh_token(self, dto: Any) -> str:
+    async def generate_refresh_token(self, dto: UserDTO) -> str:
         """
         Generate a refresh token. Note that its token_type is set to "refresh".
         """
