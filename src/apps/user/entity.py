@@ -8,7 +8,7 @@ from pydantic import EmailStr
 class UserEntity:
     name: str
     surname: str
-    email: EmailStr
+    email: EmailStr | str
     password: str | None = None
 
 

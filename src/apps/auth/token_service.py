@@ -51,8 +51,8 @@ class TokenService:
             return decode(token, self.secret_key, algorithms=[self.algorithm])
         except ExpiredSignatureError:
             raise ExpiredSignatureError("Token lifetime is expired")
-        except PyJWTError:
-            raise Exception("Token is invalid")
+        except PyJWTError as e:
+            raise Exception(f"Token is invalid, {e}")
 
     async def generate_access_token(self, dto: UserDTO) -> str:
         """
@@ -62,8 +62,8 @@ class TokenService:
         payload = {
             "token_type": "access",
             "user": {"user_id": str(dto.id), "user_name": str(dto.name)},
-            "exp": expire,
-            "iat": datetime.now(),
+            "exp": int(expire.timestamp()),
+            "iat": int(datetime.now().timestamp()),
         }
         return await self.encode_token(payload)
 

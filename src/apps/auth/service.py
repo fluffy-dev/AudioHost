@@ -1,6 +1,6 @@
-from src.api.auth.dtos.token import RefreshTokenDTO
 from src.libs.exceptions import RegistrationError, AlreadyExistError
 
+from src.api.auth.dtos.token import RefreshTokenDTO, AccessTokenDTO
 from src.api.auth.dtos.registration import RegistrationDTO
 from src.api.auth.dtos.login import LoginDTO
 
@@ -43,3 +43,14 @@ class AuthService:
         user_info = payload.get("user")
 
         return await self.token_service.create_tokens(UserBaseDTO(id=user_info["user_id"], name=user_info["user_name"]))
+
+    async def get_current_user(self, access_token: AccessTokenDTO):
+        payload = await self.token_service.decode_token(access_token.access_token)
+        print(payload)
+
+        user_info = payload.get("user")
+
+        return await self.user_service.get_user(FindUserDTO(id=user_info["user_id"], name=user_info["user_name"]))
+
+
+

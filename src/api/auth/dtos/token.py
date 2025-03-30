@@ -7,3 +7,6 @@ class TokenDTO(BaseModel):
 
 class RefreshTokenDTO(BaseModel):
     refresh_token: str
+
+class AccessTokenDTO(BaseModel):
+    access_token: str

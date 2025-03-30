@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, Request, Response, Cookie
 
 from typing import Optional
 
-from src.api.auth.dtos.token import RefreshTokenDTO
+from src.api.auth.dtos.token import RefreshTokenDTO, AccessTokenDTO
 from src.libs.exceptions import RegistrationError
 from src.api.auth.dtos.registration import RegistrationDTO
 from src.apps.user.dto import UserDTO
@@ -79,3 +79,14 @@ async def logout(response: Response):
     response.delete_cookie(key="access_token")
     response.delete_cookie(key="refresh_token")
     return {"message": "Logged out successfully"}
+
+
+@router.get("/me")
+async def get_me(service: IAuthService, access_token: Optional[str] = Cookie(default=None)):
+    if not access_token:
+        raise HTTPException(status_code=401, detail="Access token missing")
+
+    try:
+        return await service.get_current_user(AccessTokenDTO(access_token=access_token))
+    except Exception as e:
+        raise HTTPException(status_code=401, detail=str(e))
