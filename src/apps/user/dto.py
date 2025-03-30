@@ -18,7 +18,8 @@ class UserDTO(BaseModel):
 
 
 class UpdateUserDTO(BaseModel):
-    pass
+    name: constr(max_length=20)
+    surname: constr(max_length=20)
 
 
 class UserBaseDTO(BaseModel):

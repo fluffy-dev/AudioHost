@@ -47,4 +47,5 @@ class AudioFileRepository:
             file_path=row.file_path,
             file_description=row.file_description,
             file_size=row.file_size,
+            user_id=row.user_id
         )

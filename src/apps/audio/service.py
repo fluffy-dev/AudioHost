@@ -24,7 +24,6 @@ class AudioService:
 
         return file_data
 
-
     async def upload_file(self, file: UploadFile, dto: UploadFileDTO) -> AudioFileDTO:
         file_extension = os.path.splitext(file.filename)[1]
         unique_filename = f"{uuid.uuid4()}{file_extension}"
@@ -43,7 +42,7 @@ class AudioService:
                                  file_description=dto.file_description,
                                  user_id=dto.user_id)
 
-        return await self.repository.create_audio_file(entity)
+        return await self.repository.create(entity)
 
     async def list_audio_files(self, user_id: int) -> List[AudioFileDTO]:
         return await self.repository.get_by_user(user_id)

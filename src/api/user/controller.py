@@ -11,7 +11,7 @@ router = APIRouter(prefix="/user", tags=["user"])
 
 
 
-@router.get("/get_user")
+@router.post("/get_user")
 async def get_user(dto: FindUserDTO, service: IUserService, admin_user: AdminUser) -> Optional[UserDTO]:
     try:
         return await service.get_user(dto)
