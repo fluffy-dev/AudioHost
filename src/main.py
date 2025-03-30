@@ -2,7 +2,7 @@ import uvicorn
 from src.app import get_app
 # from src.config.project import settings as main_settings #TODO
 
-
+from src.apps.audio.service import AudioService
 app = get_app()
 
 

@@ -12,6 +12,7 @@ class AudioFileModel(Base):
 
     user_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
     file_name: Mapped[str] = mapped_column(String(100))
+    file_description: Mapped[str] = mapped_column(Text)
     file_path: Mapped[str] = mapped_column(Text)
     file_size: Mapped[int] = mapped_column(Integer, nullable=True)
 
