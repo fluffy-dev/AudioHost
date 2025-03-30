@@ -9,6 +9,15 @@ from src.api.protection import AuthUser
 
 router = APIRouter(prefix="/audio", tags=["audio"])
 
+ALLOWED_AUDIO_TYPES = {
+    "audio/mpeg",       # MP3
+    "audio/wav",        # WAV
+    "audio/ogg",        # OGG
+    "audio/x-wav",      # WAV alternative
+    "audio/x-m4a",      # M4A
+    "audio/mp4",        # MP4 audio
+    "audio/aac",        # AAC
+}
 
 @router.get("/")
 async def list_files(user: AuthUser, service: IAudioService):
@@ -20,8 +29,12 @@ async def list_files(user: AuthUser, service: IAudioService):
 
 @router.post("/file")
 async def upload_file(file: UploadFile, file_description: str, user: AuthUser, service: IAudioService):
+    if file.content_type not in ALLOWED_AUDIO_TYPES:
+        raise HTTPException(status_code=400, detail="Unsupported file type")
+
     dto = UploadFileDTO(file_description=file_description,
                         user_id=user.id)
+
     try:
         return await service.upload_file(file, dto)
     except Exception as e:
