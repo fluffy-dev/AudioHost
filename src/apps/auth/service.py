@@ -1,9 +1,10 @@
+from src.api.auth.dtos.token import RefreshTokenDTO
 from src.libs.exceptions import RegistrationError, AlreadyExistError
 
 from src.api.auth.dtos.registration import RegistrationDTO
 from src.api.auth.dtos.login import LoginDTO
 
-from src.apps.user.dto import FindUserDTO, UserDTO
+from src.apps.user.dto import FindUserDTO, UserDTO, UserBaseDTO
 from src.apps.user.entity import UserEntity
 from src.apps.user.depends.service import IUserService
 
@@ -32,3 +33,13 @@ class AuthService:
         if not user or user.password != dto_hash:
             raise ValueError("Invalid password or login")
         return await self.token_service.create_tokens(user)
+
+    async def refresh(self, dto: RefreshTokenDTO):
+        payload = await self.token_service.decode_token(dto.refresh_token)
+
+        if payload.get("token_type") != "refresh":
+            raise ValueError("Invalid refresh token")
+
+        user_info = payload.get("user")
+
+        return await self.token_service.create_tokens(UserBaseDTO(id=user_info["user_id"], name=user_info["user_name"]))

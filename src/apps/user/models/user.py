@@ -22,4 +22,4 @@ class UserModel(Base):
     email: Mapped[str] = mapped_column(String(50), unique=True, index=True)
     password: Mapped[str]
 
-    is_admin: Mapped[bool] = mapped_column(Boolean)
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False)

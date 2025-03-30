@@ -69,7 +69,7 @@ class TokenService:
 
     async def generate_refresh_token(self, dto: UserDTO) -> str:
         """
-        Generate a refresh token. Note that its token_type is set to "refresh".
+        Generate a refresh token.
         """
         expire = datetime.now() + timedelta(seconds=self.refresh_token_lifetime)
         payload = {

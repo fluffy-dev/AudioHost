@@ -1,3 +1,4 @@
+from typing import Optional, List, Type
 from sqlalchemy import select, update, delete
 from sqlalchemy.exc import IntegrityError
 from fastapi import HTTPException
@@ -10,13 +11,14 @@ from src.apps.user.dto import UpdateUserDTO, UserDTO, FindUserDTO
 
 
 class UserRepository:
-    model = UserModel
+    model: Type[UserModel] = UserModel
 
-    def __init__(self, session: ISession):
-        self.session = session
+    def __init__(self, session: ISession) -> None:
+        self.session: ISession = session
 
     async def create(self, user: UserEntity) -> UserDTO:
-        instance = UserModel(**user.__dict__)
+        instance: UserModel = UserModel(**user.__dict__)
+        print(user)
         self.session.add(instance)
         try:
             await self.session.commit()
@@ -25,20 +27,20 @@ class UserRepository:
         await self.session.refresh(instance)
         return self._get_dto(instance)
 
-    async def get_user(self, dto: FindUserDTO) -> UserDTO | None:
+    async def get_user(self, dto: FindUserDTO) -> Optional[UserDTO]:
         stmt = select(self.model).filter_by(**dto.model_dump(exclude_none=True))
-        result = (await self.session.execute(stmt)).scalar_one_or_none()
-        return self._get_dto(result) if result else None
+        result: Optional[UserModel] = (await self.session.execute(stmt)).scalar_one_or_none()
+        return self._get_dto(result) if result is not None else None
 
-    async def get_list(self, limit: int) -> list[UserDTO]:
+    async def get_list(self, limit: int) -> List[UserDTO]:
         stmt = select(self.model).limit(limit)
-        results = (await self.session.execute(stmt)).scalars().all()
+        results: List[UserModel] = (await self.session.execute(stmt)).scalars().all()
         return [self._get_dto(row) for row in results]
 
-    async def get(self, pk: int) -> UserDTO | None:
+    async def get(self, pk: int) -> Optional[UserDTO]:
         stmt = select(self.model).filter_by(id=pk)
-        result = (await self.session.execute(stmt)).scalar_one_or_none()
-        return self._get_dto(result) if result else None
+        result: Optional[UserModel] = (await self.session.execute(stmt)).scalar_one_or_none()
+        return self._get_dto(result) if result is not None else None
 
     async def update(self, dto: UpdateUserDTO, pk: int) -> UserDTO:
         stmt = (
@@ -47,9 +49,9 @@ class UserRepository:
             .filter_by(id=pk)
             .returning(self.model)
         )
-        result = (await self.session.execute(stmt)).scalar_one_or_none()
+        result: Optional[UserModel] = (await self.session.execute(stmt)).scalar_one_or_none()
         await self.session.commit()
-        if not result:
+        if result is None:
             raise HTTPException(status_code=404, detail="User not found")
         return self._get_dto(result)
 
@@ -65,9 +67,9 @@ class UserRepository:
             .filter_by(id=pk)
             .returning(self.model)
         )
-        result = (await self.session.execute(stmt)).scalar_one_or_none()
+        result: Optional[UserModel] = (await self.session.execute(stmt)).scalar_one_or_none()
         await self.session.commit()
-        if not result:
+        if result is None:
             raise HTTPException(status_code=404, detail="User not found")
         return self._get_dto(result)
 
@@ -77,4 +79,5 @@ class UserRepository:
             name=row.name,
             surname=row.surname,
             email=row.email,
+            password=row.password,
         )
