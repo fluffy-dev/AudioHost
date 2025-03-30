@@ -18,7 +18,6 @@ class UserRepository:
 
     async def create(self, user: UserEntity) -> UserDTO:
         instance: UserModel = UserModel(**user.__dict__)
-        print(user)
         self.session.add(instance)
         try:
             await self.session.commit()
@@ -80,4 +79,5 @@ class UserRepository:
             surname=row.surname,
             email=row.email,
             password=row.password,
+            is_admin=row.is_admin
         )

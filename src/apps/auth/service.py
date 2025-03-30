@@ -44,11 +44,13 @@ class AuthService:
 
         return await self.token_service.create_tokens(UserBaseDTO(id=user_info["user_id"], name=user_info["user_name"]))
 
-    async def get_current_user(self, access_token: AccessTokenDTO):
+    async def get_current_user(self, access_token: AccessTokenDTO) -> UserDTO:
         payload = await self.token_service.decode_token(access_token.access_token)
-        print(payload)
 
         user_info = payload.get("user")
+
+        if user_info is None:
+            raise ValueError("Invalid access token")
 
         return await self.user_service.get_user(FindUserDTO(id=user_info["user_id"], name=user_info["user_name"]))
 

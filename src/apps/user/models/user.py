@@ -1,5 +1,5 @@
 from sqlalchemy import String, Boolean
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from src.libs.base_model import Base
 
@@ -23,3 +23,5 @@ class UserModel(Base):
     password: Mapped[str]
 
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
+
+    audio_files = relationship("AudioFileModel", back_populates="user")

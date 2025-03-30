@@ -14,6 +14,7 @@ class UserDTO(BaseModel):
     surname: constr(max_length=20)
     email: EmailStr
     password: str = None
+    is_admin: bool = False
 
 
 class UpdateUserDTO(BaseModel):
