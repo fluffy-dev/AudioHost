@@ -11,6 +11,7 @@ class UserEntity:
     email: EmailStr | str
     password: str | None = None
 
+    is_admin: bool  = False
 
     def __post_init__(self):
         if self.password is not None:
