@@ -1,10 +1,15 @@
+import logging
 from fastapi import FastAPI
 
 from src.api.routes import router
 from src.middleware import init_middleware
 
 
+from src.config.logging import settings as logger_settings, logger_config
+
 def get_app() -> FastAPI:
+    if logger_settings.logging_on:
+        logging.config.dictConfig(logger_config)
     app = FastAPI()
 
     init_middleware(app)
